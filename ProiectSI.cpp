@@ -1,6 +1,7 @@
 #include <iostream>
 #include <openssl/aes.h>
 #include <openssl/evp.h>
+#include "DB.h"
 
 int do_crypt(char* outfile)
 {
@@ -45,13 +46,16 @@ int do_crypt(char* outfile)
      * it won't be NUL terminated and may contain embedded
      * NULs.
      */
-    out = fopen_s(out*, "wb", "r");
-    if (out == NULL) {
+
+    // Am comentat ce e sub
+
+    //out = fopen_s(out*, "wb", "r");
+    //if (out == NULL) {
         /* Error */
-        return 0;
-    }
-    fwrite(outbuf, 1, outlen, out);
-    fclose(out);
+    //   return 0;
+    //}
+    //fwrite(outbuf, 1, outlen, out);
+    //fclose(out);
     return 1;
 }
 
@@ -59,5 +63,14 @@ int main()
 {
     char f[] = "file.txt";
     int a = do_crypt(f);
-    std::cout << a;
+    cout << a << endl;
+
+    const char* dir = "C:\\Users\\themy\\source\\repos\\ProiectSI\\SI.db";
+    sqlite3* DB;
+
+    createDB(dir);
+    createTable(dir);
+
+    system("Pause");
+    return 0;
 }

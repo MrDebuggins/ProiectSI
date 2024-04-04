@@ -15,6 +15,12 @@
     <ClCompile Include="Persistence\Key.cpp">
       <Filter>Persistence</Filter>
     </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Persistence\File.cpp">
       <Filter>Persistence</Filter>
     </ClCompile>
@@ -51,6 +57,11 @@
     <ClInclude Include="LIB.h">
       <Filter>Crypto</Filter>
     </ClInclude>
-    <ClInclude Include="bigint.h" />
+    <ClInclude Include="DB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

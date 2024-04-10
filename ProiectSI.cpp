@@ -66,8 +66,6 @@ int main(int argc, char* argv[])
 int main()
 {
     char f[] = "file.txt";
-    int a = do_crypt(f);
-    // cout << a << endl;
 
     const char* dir = "SI.db";
     sqlite3* DB;

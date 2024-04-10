@@ -19,29 +19,19 @@ void createTable(const char* c)
 		"ID INTEGER PRIMARY KEY AUTOINCREMENT, " 
 		"ALGORITHM_NAME VARCHAR(255));";
 
-	string sym_table = "CREATE TABLE IF NOT EXISTS SYMMETRIC(" 
+	string key_table = "CREATE TABLE IF NOT EXISTS KEY(" 
 		"ID INTEGER PRIMARY KEY AUTOINCREMENT, " 
 		"ALGORITHM_ID INTEGER, " 
-		"PUBLIC_KEY VARBINARY(255), " 
-		"PRIVATE_KEY VARBINARY(255), " 
-		"FOREIGN KEY(ALGORITHM_ID) REFERENCES ALGORITHM(ID));";
-
-	string asym_table = "CREATE TABLE IF NOT EXISTS ASYMMETRIC(" 
-		"ID INTEGER PRIMARY KEY AUTOINCREMENT, " 
-		"ALGORITHM_ID INTEGER, " 
-		"PUBLIC_KEY VARBINARY(255), " 
-		"PRIVATE_KEY VARBINARY(255), " 
+		"KEY_PATH VARCHAR(255),"
 		"FOREIGN KEY(ALGORITHM_ID) REFERENCES ALGORITHM(ID));";
 
 	string file_table = "CREATE TABLE IF NOT EXISTS FILE(" 
 		"ID INTEGER PRIMARY KEY AUTOINCREMENT, " 
-		"SYMMETRIC_KEY INTEGER, " 
-		"ASYMMETRIC_KEY INTEGER, " 
+		"KEY_ID INTEGER, "  
 		"FILE_PATH VARCHAR(255), " 
 		"ENCR_TIME DOUBLE, " 
 		"DECR_TIME DOUBLE, " 
-		"FOREIGN KEY(SYMMETRIC_KEY) REFERENCES SYMMETRIC(ID), " 
-		"FOREIGN KEY(ASYMMETRIC_KEY) REFERENCES ASYMMETRIC(ID));";
+		"FOREIGN KEY(KEY_ID) REFERENCES KEY(ID));";
 
 	try {
 		int exit = 0;
@@ -70,11 +60,9 @@ void createTable(const char* c)
 			cout << "Table created successfully" << endl;
 		}
 
-		exit = sqlite3_exec(DB, sym_table.c_str(), NULL, 0, &messageError);
-
 		if (exit != SQLITE_OK)
 		{
-			cerr << "Error Create Table Symmetric" << endl;
+			cerr << "Error Create Table Asymmetric" << endl;
 			sqlite3_free(messageError);
 		}
 		else
@@ -82,11 +70,11 @@ void createTable(const char* c)
 			cout << "Table created successfully" << endl;
 		}
 
-		exit = sqlite3_exec(DB, asym_table.c_str(), NULL, 0, &messageError);
+		exit = sqlite3_exec(DB, key_table.c_str(), NULL, 0, &messageError);
 
 		if (exit != SQLITE_OK)
 		{
-			cerr << "Error Create Table Asymmetric" << endl;
+			cerr << "Error Create Table Key" << endl;
 			sqlite3_free(messageError);
 		}
 		else
@@ -153,12 +141,9 @@ void selectData(const char* c, int table)
 		sql = "SELECT * FROM ALGORITHM";
 		break;
 	case 2:
-		sql = "SELECT * FROM SYMMETRIC";
+		sql = "SELECT * FROM KEY";
 		break;
 	case 3:
-		sql = "SELECT * FROM ASYMMETRIC";
-		break;
-	case 4:
 		sql = "SELECT * FROM FILE";
 		break;
 	}
@@ -175,7 +160,7 @@ void selectData(const char* c, int table)
 }
 
 
-void insertAlgorithm(const char* c, const char* name)
+void insertAlgorithm(const char* c, string name)
 {
 	sqlite3* DB;
 	char* messageError;
@@ -188,9 +173,7 @@ void insertAlgorithm(const char* c, const char* name)
 		return;
 	}
 
-	string sql = "INSERT INTO ALGORITHM(ALGORITHM_NAME) VALUES(";
-	sql += name;
-	sql += ");";
+	string sql = "INSERT INTO ALGORITHM(ALGORITHM_NAME) VALUES('" + name + "');";
 
 	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
 	if (exit != SQLITE_OK)
@@ -205,7 +188,7 @@ void insertAlgorithm(const char* c, const char* name)
 }
 
 
-void insertSymKey(const char* c, int alg_id, unsigned char public_key, unsigned char private_key)
+void insertKey(const char* c, int alg_id, string key_path)
 {
 	sqlite3* DB;
 	char* messageError;
@@ -218,27 +201,21 @@ void insertSymKey(const char* c, int alg_id, unsigned char public_key, unsigned 
 		return;
 	}
 
-	string sql = "INSERT INTO SYMMETRIC(ALGORITHM_ID, PUBLIC_KEY, PRIVATE_KEY) VALUES(";
-	sql += alg_id;
-	sql += ", ";
-	sql += public_key;
-	sql += ", ";
-	sql += private_key;
-	sql += ");";
+	string sql = "INSERT INTO KEY(ALGORITHM_ID, KEY_PATH) VALUES(" + to_string(alg_id) + ", \"" + key_path + "\");";
 
 	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
 	if (exit != SQLITE_OK)
 	{
-		cerr << "Error insert Symmetric" << endl;
+		cerr << "Error insert Key" << endl;
 		sqlite3_free(messageError);
 	}
 	else
-		cout << "Symmetric inserted successfully" << endl;
+		cout << "Key inserted successfully" << endl;
 
 	sqlite3_close(DB);
 }
 
-void insertAsymKey(const char* c, int alg_id, unsigned char public_key, unsigned char private_key)
+void insertFile(const char* c, int key_id, string path, double encr_time, double decr_time)
 {
 	sqlite3* DB;
 	char* messageError;
@@ -251,50 +228,8 @@ void insertAsymKey(const char* c, int alg_id, unsigned char public_key, unsigned
 		return;
 	}
 
-	string sql = "INSERT INTO ASYMMETRIC(ALGORITHM_ID, PUBLIC_KEY, PRIVATE_KEY) VALUES(";
-	sql += alg_id;
-	sql += ", ";
-	sql += public_key;
-	sql += ", ";
-	sql += private_key;
-	sql += ");";
-
-	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
-	if (exit != SQLITE_OK)
-	{
-		cerr << "Error insert Asymmetric" << endl;
-		sqlite3_free(messageError);
-	}
-	else
-		cout << "Asymmetric inserted successfully" << endl;
-
-	sqlite3_close(DB);
-}
-
-void insertFile(const char* c, int sym_id, int asym_id, const char* path, double encr_time, double decr_time)
-{
-	sqlite3* DB;
-	char* messageError;
-
-	int exit = sqlite3_open(c, &DB);
-
-	if (exit)
-	{
-		cerr << "Can't open DB" << endl;
-		return;
-	}
-
-	string sql = "INSERT INTO FILE(SYMMETRIC_KEY, ASYMMETRIC_KEY, FILE_PATH, ENCR_TIME, DECR_TIME) VALUES(";
-	sql += sym_id;
-	sql += ", ";
-	sql += asym_id;
-	sql += ", ";
-	sql += path;
-	sql += ", ";
-	sql += encr_time;
-	sql += ", ";
-	sql += decr_time;
-	sql += ");";
+	string sql = "INSERT INTO FILE(KEY_ID, FILE_PATH, ENCR_TIME, DECR_TIME) VALUES(" + to_string(key_id) + ", \"" + path + "\", " 
+		+ to_string(encr_time) + ", " + to_string(decr_time) + ");";
 
 	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
 	if (exit != SQLITE_OK)
@@ -320,9 +255,7 @@ void deleteAlgorithm(const char* c, int id)
 		return;
 	}
 
-	string sql = "DELETE FROM ALGORITHM where ID=";
-	sql += id;
-	sql += ";";
+	string sql = "DELETE FROM ALGORITHM where ID=" + to_string(id) + ";";
 
 	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
 	if (exit != SQLITE_OK)
@@ -338,7 +271,7 @@ void deleteAlgorithm(const char* c, int id)
 	sqlite3_close(DB);
 }
 
-void deleteSymmetric(const char* c, int id)
+void deleteKey(const char* c, int id)
 {
 	sqlite3* DB;
 	char* messageError;
@@ -350,49 +283,17 @@ void deleteSymmetric(const char* c, int id)
 		return;
 	}
 
-	string sql = "DELETE FROM SYMMETRIC where ID=";
-	sql += id;
-	sql += ";";
+	string sql = "DELETE FROM KEY where ID=" + to_string(id) + ";";
 
 	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
 	if (exit != SQLITE_OK)
 	{
-		cerr << "Error delete Symmetric" << endl;
+		cerr << "Error delete Key" << endl;
 		sqlite3_free(messageError);
 	}
 	else
 	{
-		cout << "Symmetric deleted successfully" << endl;
-	}
-
-	sqlite3_close(DB);
-}
-
-void deleteAsymmetric(const char* c, int id)
-{
-	sqlite3* DB;
-	char* messageError;
-	int exit = sqlite3_open(c, &DB);
-
-	if (exit)
-	{
-		cerr << "Can't open DB";
-		return;
-	}
-
-	string sql = "DELETE FROM ASYMMETRIC where ID=";
-	sql += id;
-	sql += ";";
-
-	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
-	if (exit != SQLITE_OK)
-	{
-		cerr << "Error delete Asymmetric" << endl;
-		sqlite3_free(messageError);
-	}
-	else
-	{
-		cout << "Asymmetric deleted successfully" << endl;
+		cout << "Key deleted successfully" << endl;
 	}
 
 	sqlite3_close(DB);
@@ -410,9 +311,7 @@ void deleteFile(const char* c, int id)
 		return;
 	}
 
-	string sql = "DELETE FROM FILE where ID=";
-	sql += id;
-	sql += ";";
+	string sql = "DELETE FROM FILE where ID=" + to_string(id) + ";";
 
 	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
 	if (exit != SQLITE_OK)

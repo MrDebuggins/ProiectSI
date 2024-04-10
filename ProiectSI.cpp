@@ -59,17 +59,21 @@ int do_crypt(char* outfile)
     return 1;
 }
 
+
 int main()
 {
     char f[] = "file.txt";
     int a = do_crypt(f);
-    cout << a << endl;
+    // cout << a << endl;
 
-    const char* dir = "C:\\Users\\themy\\source\\repos\\ProiectSI\\SI.db";
+    const char* dir = "SI.db";
     sqlite3* DB;
 
-    createDB(dir);
-    createTable(dir);
+    //createDB(dir);
+    //createTable(dir);
+    //insertAlgorithm(dir, "bubn");
+    //insertKey(dir, 1, "C:");
+    //insertFile(dir, 1, "D:", 1, 2);
 
     system("Pause");
     return 0;

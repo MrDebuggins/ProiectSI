@@ -34,36 +34,25 @@ void selectData(const char* c, int table);
 /// </summary>
 /// <param name="c"> DB path </param>
 /// <param name="name"> File name </param>
-void insertAlgorithm(const char* c, const char* name);
+void insertAlgorithm(const char* c, string name);
 
 /// <summary>
 /// Insert into Symmetric table
 /// </summary>
 /// <param name="c"> DB path </param>
 /// <param name="alg_id"> ID of algorithm from algorithm table </param>
-/// <param name="public_key"> Public key used </param>
-/// <param name="private_key"> Private key used </param>
-void insertSymKey(const char* c, int alg_id, unsigned char public_key, unsigned char private_key);
-
-/// <summary>
-/// Insert into Asymmetric table
-/// </summary>
-/// <param name="c"> DB path </param>
-/// <param name="alg_id"> ID of algorithm from Algorithm table </param>
-/// <param name="public_key"> Public key used </param>
-/// <param name="private_key"> Private key used </param>
-void insertAsymKey(const char* c, int alg_id, unsigned char public_key, unsigned char private_key);
+/// <param name="key_path"> Path to the used key </param>>
+void insertKey(const char* c, int alg_id, string key_path);
 
 /// <summary>
 /// Insert into File table
 /// </summary>
 /// <param name="c"> DB path </param>
-/// <param name="sym_id"> ID of symmetric algorithm used from Symmetric table </param>
-/// <param name="asym_id"> ID of asymmetric algorithm used from Asymmetric table </param>
+/// <param name="key_id"> ID of key used from Key table </param>
 /// <param name="path"> File path </param>
 /// <param name="encr_time"> Encryption time </param>
 /// <param name="decr_time"> Decryption time </param>
-void insertFile(const char* c, int sym_id, int asym_id, const char* path, double encr_time, double decr_time);
+void insertFile(const char* c, int key_id, string path, double encr_time, double decr_time);
 
 /// <summary>
 /// Deletes entry with ID from Algorithm table
@@ -73,18 +62,11 @@ void insertFile(const char* c, int sym_id, int asym_id, const char* path, double
 void deleteAlgorithm(const char* c, int id);
 
 /// <summary>
-/// Deletes entry with ID from Symmetric table
+/// Deletes entry with ID from Key table
 /// </summary>
 /// <param name="c"> DB path </param>
 /// <param name="id"> ID of entry </param>
-void deleteSymmetric(const char* c, int id);
-
-/// <summary>
-/// Deletes entry with ID from Asymmetric table
-/// </summary>
-/// <param name="c"> DB path </param>
-/// <param name="id"> ID of entry </param>
-void deleteAsymmetric(const char* c, int id);
+void deleteKey(const char* c, int id);
 
 /// <summary>
 /// Deletes entry with ID from File table

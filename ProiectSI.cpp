@@ -2,6 +2,7 @@
 #include <openssl/aes.h>
 #include <openssl/evp.h>
 #include "DB.h"
+#include "Crypto/OpenSSLFacade.h"
 
 
 using namespace std;

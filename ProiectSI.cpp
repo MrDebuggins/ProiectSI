@@ -3,7 +3,10 @@
 #include <openssl/evp.h>
 #include "DB.h"
 
-int do_crypt(char* outfile)
+
+using namespace std;
+
+int main(int argc, char* argv[])
 {
     unsigned char outbuf[1024];
     int outlen, tmplen;

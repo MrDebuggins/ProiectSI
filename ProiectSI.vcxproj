@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\OpenSSL\include;D:\Soft\openssl-3\x64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\onofr\source\repos\SI\ProiectSI\Crypto;C:\Users\onofr\source\repos\SI\ProiectSI\Persistence;D:\Soft\openssl-3\x64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,12 +131,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DB.cpp" />
+    <ClCompile Include="Persistence\File.cpp" />
+    <ClCompile Include="Persistence\Key.cpp" />
     <ClCompile Include="ProiectSI.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DB.h" />
-    <ClInclude Include="OpenSSL.h" />
+    <ClInclude Include="bigint.h" />
+    <ClInclude Include="Controller\Controller.h" />
+    <ClInclude Include="Controller\Message.h" />
+    <ClInclude Include="Crypto\ALG.h" />
+    <ClInclude Include="Crypto\KEY.h" />
+    <ClInclude Include="Crypto\OpenGG.h" />
+    <ClInclude Include="Crypto\OpenSSLFacade.h" />
+    <ClInclude Include="LIB.h" />
+    <ClInclude Include="Persistence\File.h" />
+    <ClInclude Include="Persistence\Key.h" />
+    <ClInclude Include="Persistence\Repository.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

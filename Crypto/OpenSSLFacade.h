@@ -302,6 +302,7 @@ namespace OpenSSLFacade
 	{
 		EVP_CIPHER_CTX* ctx;
 		EVP_PKEY* key = readRSAPublicKey(keyFilePath);
+		int keyLen = EVP_PKEY_bits(key) / 8;
 
 		// init
 		if (!(ctx = EVP_CIPHER_CTX_new()))
@@ -322,13 +323,12 @@ namespace OpenSSLFacade
 		std::string tempOutPath = dataFilePath + "tmp";
 		std::ifstream input(dataFilePath);
 		std::ofstream output(tempOutPath);
+		unsigned char *blockIn = new unsigned char[keyLen], *blockOut = new unsigned char[keyLen * 2];
 		int inLen = 0, outLen;
 		while(true)
 		{
-			unsigned char blockIn[1024], blockOut[4096];
-
 			// read max 1024 bytes from file
-			input.read((char*)blockIn, 8);
+			input.read((char*)blockIn, 64);
 			inLen = input.gcount();
 
 			// end of file
@@ -342,8 +342,6 @@ namespace OpenSSLFacade
 			// write to temporary file
 			output.write((char*)blockOut, outLen);
 		}
-
-		unsigned char blockIn[1024], blockOut[4096];
 
 		// finish encryption
 		if (1 != EVP_SealFinal(ctx, blockOut + outLen, &outLen))
@@ -371,6 +369,7 @@ namespace OpenSSLFacade
 	{
 		EVP_CIPHER_CTX* ctx;
 		EVP_PKEY* key = readRSAPrivateKey(keyFilePath);
+		int keyLen = EVP_PKEY_bits(key) / 8;
 
 		// init
 		if (!(ctx = EVP_CIPHER_CTX_new()))
@@ -386,19 +385,15 @@ namespace OpenSSLFacade
 			throw std::exception("Decryption failed!");
 
 		std::string tempOutPath = dataFilePath + "tmp";
-		std::ifstream input(dataFilePath);
+		std::ifstream input(dataFilePath, std::ios_base::binary);
 		std::ofstream output(tempOutPath);
-		unsigned char blockIn[1024], blockOut[1024];
+		unsigned char *blockIn = new unsigned char[keyLen], *blockOut = new unsigned char[keyLen * 2];
 		int inLen = 0, outLen;
 		system("cd");
 		while(true)
 		{
-			//char a[1024];
-			//input.getline(a, 32);
-			
-
 			// read max 1024 bytes from file
-			input.read((char*)blockIn, 8);
+			input.read((char*)blockIn, 64);
 			inLen = input.gcount();
 
 			// end of file
@@ -413,9 +408,20 @@ namespace OpenSSLFacade
 		}
 
 		// finish encryption
+		//int offset = outLen;
+		//if(outLen != 0)
+		//{
+		//	if (1 != EVP_OpenFinal(ctx, blockOut + outLen, &outLen))
+		//		throw std::exception("Decryption failed!");
+		//	output.write((char*)blockOut + offset, outLen);
+		//}
+
 		int offset = outLen;
 		if (1 != EVP_OpenFinal(ctx, blockOut + outLen, &outLen))
-			throw std::exception("Decryption failed!");
+		{
+			output.close();
+			throw exception("Decryption failed!");
+		}
 
 		// write remaining data if any
 		if (outLen != 0)

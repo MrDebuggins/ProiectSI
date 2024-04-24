@@ -21,10 +21,8 @@ int main()
     //insertFile(dir, 1, "D:", 1, 2);
 
     //OpenSSLFacade::genRSAKey(4096, "rsa.txt");
-    //OpenSSLFacade::asymmetricEncrypt("rsa.txt", "lol.txt", nullptr);
+    OpenSSLFacade::asymmetricEncrypt("rsa.txt", "lol.txt", nullptr);
     OpenSSLFacade::asymmetricDecrypt("rsa.txt", "lol.txt", nullptr);
 
-
-    system("Pause");
     return 0;
 }

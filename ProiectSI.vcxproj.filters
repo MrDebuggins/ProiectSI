@@ -19,7 +19,6 @@
       <Filter>Persistence</Filter>
     </ClCompile>
     <ClCompile Include="ProiectSI.cpp" />
-    <ClCompile Include="DB.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>

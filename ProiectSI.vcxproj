@@ -130,7 +130,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DB.cpp" />
     <ClCompile Include="Persistence\File.cpp" />
     <ClCompile Include="Persistence\Key.cpp" />
     <ClCompile Include="ProiectSI.cpp" />

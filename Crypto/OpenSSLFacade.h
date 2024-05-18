@@ -1,6 +1,5 @@
 #pragma once
 #include <chrono>
-#include <time.h>
 #include <fstream>
 #include <string>
 #include <openssl/evp.h>
@@ -10,12 +9,12 @@
 #include <openssl/rsa.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
-#include <openssl/applink.c>
+//#include <openssl/applink.c>
 
 
 namespace OpenSSLFacade
 {
-	inline void genSymmetricKey(void* cipher, std::string filePath = nullptr)
+	inline void genSymmetricKey(void* cipher, std::string filePath)
 	{
 		int keyLen = EVP_CIPHER_key_length((EVP_CIPHER*)cipher);
 		int ivLen = EVP_CIPHER_get_iv_length((EVP_CIPHER*)cipher);
@@ -103,7 +102,7 @@ namespace OpenSSLFacade
 		}
 
 		// read - encrypt - write blocks of 1024 bytes until end of file
-		auto start = chrono::high_resolution_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		int inLen = 0, outLen;
 		while(true)
 		{
@@ -135,7 +134,7 @@ namespace OpenSSLFacade
 		}
 
 		// get duration
-		float duration = chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::now() - start).count() / 1000000.0;
+		float duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000000.0;
 
 		// write remaining data
 		output.write((char*)blockOut + offset, outLen);
@@ -200,7 +199,7 @@ namespace OpenSSLFacade
 		}
 
 		// read - decrypt - write blocks of 1024 bytes until end of file
-		auto start = chrono::high_resolution_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		int inLen = 0, outLen;
 		while (true)
 		{
@@ -232,7 +231,7 @@ namespace OpenSSLFacade
 		}
 
 		//get duration
-		float duration = chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::now() - start).count() / 1000000.0;
+		float duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000000.0;
 
 		// write remaining data
 		output.write((char*)blockOut + offset, outLen);
@@ -365,7 +364,7 @@ namespace OpenSSLFacade
 		return key;
 	}
 
-	inline float asymmetricEncrypt(std::string keyFilePath, std::string dataFilePath, void* cipher)
+	inline float asymmetricEncrypt(std::string keyFilePath, std::string dataFilePath)
 	{
 		std::string tempOutPath = dataFilePath + "tmp";												// output stream file path
 		std::ifstream input(dataFilePath, std::ios_base::binary);								// input stream
@@ -410,7 +409,7 @@ namespace OpenSSLFacade
 		saveSeal(keyFilePath, encryptedKey[0], ekLen, iv);
 
 		// read - encrypt - write blocks of 16 bytes until end of file
-		auto start = chrono::high_resolution_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		int inLen = 0, outLen = 0;
 		while(true)
 		{
@@ -442,7 +441,7 @@ namespace OpenSSLFacade
 		}
 
 		// get duration
-		float duration = chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::now() - start).count() / 1000000.0;
+		float duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000000.0;
 
 		// write remaining data
 		output.write((char*)blockOut + offset, outLen);
@@ -465,7 +464,7 @@ namespace OpenSSLFacade
 		return duration;
 	}
 
-	inline float asymmetricDecrypt(std::string keyFilePath, std::string dataFilePath, void* cipher)
+	inline float asymmetricDecrypt(std::string keyFilePath, std::string dataFilePath)
 	{
 		std::string tempOutPath = dataFilePath + "tmp";												// output stream file path
 		std::ifstream input(dataFilePath, std::ios_base::binary);								// input stream
@@ -509,7 +508,7 @@ namespace OpenSSLFacade
 		}
 
 		// read - decrypt - write blocks of 16 bytes until end of file
-		auto start = chrono::high_resolution_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		int inLen = 0, outLen = 0;
 		while(true)
 		{
@@ -541,7 +540,7 @@ namespace OpenSSLFacade
 		}
 
 		// get duration
-		float duration = chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::now() - start).count() / 1000000.0;
+		float duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000000.0;
 
 		// write remaining data
 		output.write((char*)blockOut + offset, outLen);
@@ -562,5 +561,26 @@ namespace OpenSSLFacade
 		delete[]encryptedKey;
 
 		return duration;
+	}
+
+	inline std::string hash(std::string filePath)
+	{
+		std::ifstream file(filePath, std::ios_base::binary);
+		char block[256];
+		int read;
+		unsigned char hash[32];
+		unsigned char b64Hash[64];
+		unsigned int hashSize;
+
+		if (!file.good())
+			throw std::exception("Invalid file path!");
+
+		file.read(block, 256);
+		read = file.gcount();
+
+		EVP_Digest(block, read, hash, &hashSize, EVP_sha256(), nullptr);
+		EVP_EncodeBlock(b64Hash, hash, hashSize);
+
+		return std::string((char*)b64Hash);
 	}
 };

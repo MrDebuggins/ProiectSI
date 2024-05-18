@@ -28,6 +28,7 @@ int main()
     //float a1 = OpenSSLFacade::asymmetricEncrypt("rsa.txt", "lol.txt", nullptr);
     //float b1 = OpenSSLFacade::asymmetricDecrypt("rsa.txt", "lol.txt", nullptr);
     //cout << "encr: " << a1 << "  decr: " << b1 << endl;
+    OpenSSLFacade::hash("");
 
     return 0;
 }

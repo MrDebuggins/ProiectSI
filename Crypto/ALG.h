@@ -3,8 +3,7 @@
 
 enum ALG
 {
-	AES_256_CBC,
-	GG_AES_256_CBC,
-	SSL_RSA,
-	GG_RSA
+	ALG_AES_256_CBC,
+	ALG_AES_128_CBC,
+	ALG_A_RSA
 };

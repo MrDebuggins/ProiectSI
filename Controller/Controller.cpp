@@ -1,6 +1,6 @@
 #include "Controller.h"
-#include "OpenGG.h"
 #include "OpenSSLFacade.h"
+#include "OpenGG.h"
 
 
 Controller::Controller(std::queue<Message>* in, std::queue<Message>* out)
@@ -26,6 +26,28 @@ bool Controller::isSymmetric(ALG alg)
 	return false;
 }
 
+int Controller::rsaSize(ALG alg)
+{
+	switch (alg)
+	{
+	case ALG_RSA_4096:
+		return 4096;
+	case ALG_RSA_2048:
+		return 2048;
+	case ALG_RSA_1024:
+		return 1024;
+	}
+}
+
+std::vector<ALG> Controller::getOpenSSLAlgs()
+{
+	return algsOpenSSL;
+}
+
+std::vector<ALG> Controller::getOpenggAlgs()
+{
+	return algsOpenGG;
+}
 
 void Controller::processMessage(Message msg)
 {
@@ -37,7 +59,7 @@ void Controller::processMessage(Message msg)
 			if(isSymmetric(msg.algorithm))
 				OpenSSLFacade::genSymmetricKey(cipherOpenSSL[msg.algorithm], msg.keyFilePath);
 			else
-				OpenSSLFacade::genRSAKey(msg.time, msg.keyFilePath);
+				OpenSSLFacade::genRSAKey(rsaSize(msg.algorithm), msg.keyFilePath);
 		}
 		catch (std::exception ex)
 		{
@@ -70,7 +92,7 @@ void Controller::processMessage(Message msg)
 				}
 				else
 				{
-					//TODO rsa implementation
+					t = OpenGG::asymmetricEncrDecr(msg.keyFilePath, msg.dataFilePath, true);
 				}
 			}
 			msg.setResponse("", t, hash);
@@ -106,7 +128,7 @@ void Controller::processMessage(Message msg)
 				}
 				else
 				{
-					//TODO rsa implementation
+					t = OpenGG::asymmetricEncrDecr(msg.keyFilePath, msg.dataFilePath, false);
 				}
 			}
 			hash = OpenSSLFacade::hash(msg.dataFilePath);

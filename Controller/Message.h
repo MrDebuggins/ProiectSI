@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+#include "LIB.h"
+#include "ALG.h"
+
 
 enum CRYPTO_OP
 {

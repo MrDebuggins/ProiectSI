@@ -1,39 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Persistence">
-      <UniqueIdentifier>{98623fe7-025b-472f-9431-9e47bb47c0a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Crypto">
       <UniqueIdentifier>{f485057b-d882-47ef-b692-461f5cf093ce}</UniqueIdentifier>
     </Filter>
     <Filter Include="Controller">
       <UniqueIdentifier>{df8cdda6-d8cc-4164-b906-b1e2b92d47b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GMP_lib">
+      <UniqueIdentifier>{5021caba-ebc5-4002-bf3c-4b3fddc20ed2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Persistence\Key.cpp">
-      <Filter>Persistence</Filter>
-    </ClCompile>
-    <ClCompile Include="Persistence\File.cpp">
-      <Filter>Persistence</Filter>
-    </ClCompile>
     <ClCompile Include="ProiectSI.cpp" />
     <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="Controller\Controller.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GMP_lib\mini-gmp.c">
+      <Filter>GMP_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GMP_lib\mini-mpq.c">
+      <Filter>GMP_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypto\OpenGG.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypto\OpenSSLFacade.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Persistence\Key.h">
-      <Filter>Persistence</Filter>
-    </ClInclude>
-    <ClInclude Include="Persistence\Repository.h">
-      <Filter>Persistence</Filter>
-    </ClInclude>
-    <ClInclude Include="Persistence\File.h">
-      <Filter>Persistence</Filter>
-    </ClInclude>
-    <ClInclude Include="Crypto\KEY.h">
-      <Filter>Crypto</Filter>
-    </ClInclude>
     <ClInclude Include="Crypto\ALG.h">
       <Filter>Crypto</Filter>
     </ClInclude>
@@ -49,10 +46,16 @@
     <ClInclude Include="Controller\Controller.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="LIB.h">
+    <ClInclude Include="Crypto\LIB.h">
       <Filter>Crypto</Filter>
     </ClInclude>
-    <ClInclude Include="bigint.h" />
+    <ClInclude Include="DB.h" />
+    <ClInclude Include="GMP_lib\mini-gmp.h">
+      <Filter>GMP_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GMP_lib\mini-mpq.h">
+      <Filter>GMP_lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

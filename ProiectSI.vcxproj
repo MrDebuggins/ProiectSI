@@ -104,7 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\OpenSSL\include;Crypto;Persistence;D:\Soft\openssl-3\x64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\OpenSSL\include;Crypto;Persistence;D:\Soft\openssl-3\x64\include;GMP_lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/sdl- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,23 +131,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Persistence\File.cpp" />
-    <ClCompile Include="Persistence\Key.cpp" />
+    <ClCompile Include="Controller\Controller.cpp" />
+    <ClCompile Include="Crypto\OpenGG.cpp" />
+    <ClCompile Include="Crypto\OpenSSLFacade.cpp" />
+    <ClCompile Include="GMP_lib\mini-gmp.c" />
+    <ClCompile Include="GMP_lib\mini-mpq.c" />
     <ClCompile Include="ProiectSI.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bigint.h" />
     <ClInclude Include="Controller\Controller.h" />
     <ClInclude Include="Controller\Message.h" />
     <ClInclude Include="Crypto\ALG.h" />
-    <ClInclude Include="Crypto\KEY.h" />
+    <ClInclude Include="Crypto\LIB.h" />
     <ClInclude Include="Crypto\OpenGG.h" />
     <ClInclude Include="Crypto\OpenSSLFacade.h" />
-    <ClInclude Include="LIB.h" />
-    <ClInclude Include="Persistence\File.h" />
-    <ClInclude Include="Persistence\Key.h" />
-    <ClInclude Include="Persistence\Repository.h" />
+    <ClInclude Include="DB.h" />
+    <ClInclude Include="GMP_lib\mini-gmp.h" />
+    <ClInclude Include="GMP_lib\mini-mpq.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

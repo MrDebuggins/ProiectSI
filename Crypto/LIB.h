@@ -1,5 +1,4 @@
 #pragma once
-#include "ALG.h"
 
 
 enum LIB

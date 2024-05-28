@@ -3,84 +3,102 @@
 #include <string>
 #include "DB.h"
 
-using namespace Database;
+namespace Interface {
 
-void optionChoice()
-{
-	int option;
-	cout << "Choose one of the following: " << endl;
-	cout << "1. Display Algorithms" << endl;
-	cout << "2. Display files" << endl;
-	cout << "3. Display file content" << endl;
-	cout << "4. Insert file" << endl;
-	cout << "5. Delete file" << endl;
-	cout << "6. Exit" << endl;
-	cin >> option;
+	void insertFileInterface();
+	void deleteFileInterface();
 
-	switch (option)
+	int optionChoice()
 	{
-	case 1:
-		selectData(db, option);
-		break;
-	case 2:
-		selectData(db, option);
-		break;
-	case 3:
-		selectData(db, option);
-		break;
-	case 4:
-		insertFile();
-		break;
-	case 5:
-		deleteFile();
-		break;
-	case 6:
-		return;
-		break;
-	default:
-		cout << "Option doesn't exist";
-		optionChoice();
-		break;
+		int option;
+		string fileName;
+		cout << "Choose one of the following: " << endl;
+		cout << "1. Display Algorithms" << endl;
+		cout << "2. Display files" << endl;
+		cout << "3. Display file content" << endl;
+		cout << "4. Insert file" << endl;
+		cout << "5. Delete file" << endl;
+		cout << "6. Encrypt existing file" << endl;
+		cout << "7. Decrypt existing file" << endl;
+		cout << "8. Exit" << endl;
+		cin >> option;
+
+		switch (option)
+		{
+		case 1:
+			Database::selectData(db, option);
+			break;
+		case 2:
+			Database::selectData(db, option);
+			break;
+		case 3:
+			Database::selectData(db, option);
+			break;
+		case 4:
+			insertFileInterface();
+			break;
+		case 5:
+			deleteFileInterface();
+			break;
+		case 6:
+			cout << "Select file:" << endl;
+			Database::selectData(db, 3);
+			cin >> fileName;
+			cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", fileName, true) << endl;
+			break;
+		case 7:
+			cout << "Select file to decrypt: " << endl;
+			Database::selectData(db, 3);
+			cin >> fileName;
+			cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", fileName, false) << endl;
+			break;
+		case 8:
+			return 0;
+			break;
+		default:
+			cout << "Option doesn't exist" << endl;
+			break;
+		}
 	}
-}
 
-void insertFile()
-{
-	int key_id;
-	string path;
-	double encr_time, decr_time;
-	bool status;
-
-	cout << "Key id: " << endl;
-	cout << "Available key ids: " << endl;
-	selectData(db, 2);
-	cin >> key_id;
-	cout << "Encrypted? (true/false)" << endl;
-	cin >> status;
-	if (status == true)
+	void insertFileInterface()
 	{
-		cout << "Encription time: " << endl;
-		cin >> encr_time;
-		cout << "Decription time: " << endl;
-		cin >> decr_time;
+		int key_id;
+		string path;
+		double encr_time, decr_time;
+		bool status;
+
+		cout << "File path (entire path): ";
+		cin >> path;
+		cout << "Key id: " << endl;
+		cout << "Available key ids: " << endl;
+		Database::selectData(db, 2);
+		cin >> key_id;
+		cout << "Encrypted? (true/false)" << endl;
+		cin >> status;
+		if (status == true)
+		{
+			cout << "Encription time: " << endl;
+			cin >> encr_time;
+			cout << "Decription time: " << endl;
+			cin >> decr_time;
+		}
+		else
+		{
+			encr_time = decr_time = 0;
+		}
+		Database::insertFile(db, key_id, path, encr_time, decr_time, status);
 	}
-	else
+
+	void deleteFileInterface()
 	{
-		encr_time = decr_time = 0;
+		int file_id;
+
+		cout << "Current files: " << endl;
+		Database::selectData(db, 1);
+		cout << "File id to delete: " << endl;
+		cin >> file_id;
+
+		Database::deleteFile(db, file_id);
 	}
-	insertFile(db, key_id, path, encr_time, decr_time, status);
-	optionChoice();
-}
-
-void deleteFile()
-{
-	int file_id;
-
-	cout << "Current files: " << endl;
-	selectData(db, 1);
-	cout << "File id to delete: " << endl;
-	cin >> file_id;
-
-	deleteFile(db, file_id);
-	optionChoice();
 }

@@ -149,6 +149,7 @@
     <ClInclude Include="DB.h" />
     <ClInclude Include="GMP_lib\mini-gmp.h" />
     <ClInclude Include="GMP_lib\mini-mpq.h" />
+    <ClInclude Include="Interface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

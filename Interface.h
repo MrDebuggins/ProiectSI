@@ -1,10 +1,44 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <thread>
+
 #include "DB.h"
 
 class Interface {
 public:
+	std::queue<Message> in = {};
+	std::queue<Message> out = {};
+	Controller controller = Controller(&out, &in);
+	std::thread backThread;
+
+	Interface()
+	{
+		backThread = std::thread( controller.start );
+	}
+
+	void processMessage(Message msg)
+	{
+		if (msg.message.compare(""))
+		{
+			cout << msg.message;
+			return;
+		}
+
+		std::string str;
+		switch (msg.operation)
+		{
+		case ENCRYPT:
+			str += "File \'" + msg.dataFilePath + "\' encrypted in " + std::to_string(msg.time) + "s.";
+			break;
+		case DECRYPT:
+			str += "File \'" + msg.dataFilePath + "\' decrypted in " + std::to_string(msg.time) + "s.";
+			break;
+		case GEN_KEY:
+			str += "Generated key in file \'" + msg.keyFilePath + "\'.";
+			break;
+		}
+	}
 
 	int optionChoice()
 	{
@@ -44,7 +78,9 @@ public:
 			cout << "Select file:" << endl;
 			Database::selectData(db, 3);
 			cin >> fileName;
-			Message msg(ENCRYPT, LIB_OpenGG, ALG_RSA_4096, fileName);
+			Message msg(ENCRYPT, LIB_OpenGG, ALG_RSA_4096, "rsa4096.txt", fileName, 4096);
+			out.push(msg);
+			//cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", fileName, true) << endl;
 			break;
 		}
 		case 7:
@@ -56,6 +92,7 @@ public:
 			break;
 		}
 		case 8:
+			backThread.join();
 			return 0;
 		case 9:
 		{

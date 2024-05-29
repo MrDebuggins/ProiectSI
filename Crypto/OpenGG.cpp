@@ -51,9 +51,7 @@ void OpenGG::readRSAKey(std::string keyFilePath, mpz_t* exp, mpz_t* mod, bool pu
 	keyFile.close();
 
 	EVP_PKEY* key = OpenSSLFacade::readRSAPrivateKey(keyFilePath);
-	int a = EVP_PKEY_print_private_fp(fopen(primesFilePath.c_str(), "w"), key, 0, nullptr);
-	EVP_PKEY_print_public_fp(fopen("public.txt", "w"), key, 0, nullptr);
-	EVP_PKEY_print_params_fp(fopen("params.txt", "w"), key, 0, nullptr);
+	EVP_PKEY_print_private_fp(fopen(primesFilePath.c_str(), "w"), key, 0, nullptr);
 
 	keyFile.open(primesFilePath, std::ios_base::binary);
 	keyFile.read(buffer, 4096);

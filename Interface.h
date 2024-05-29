@@ -52,8 +52,8 @@ public:
 		cout << "5. Delete file" << endl;
 		cout << "6. Encrypt existing file" << endl;
 		cout << "7. Decrypt existing file" << endl;
-		cout << "8. Generate key " << endl;
-		cout << "9. Exit" << endl;
+		cout << "8. Exit " << endl;
+		cout << "9. Generate key" << endl;
 		cin >> option;
 
 		switch (option)
@@ -92,6 +92,7 @@ public:
 			break;
 		}
 		case 8:
+			Message msg("stop");
 			backThread.join();
 			return 0;
 		case 9:

@@ -40,6 +40,11 @@ public:
 		time = size;
 	}
 
+	Message(std::string msg)
+	{
+		message = msg;
+	}
+
 	/**
 	 * \brief Add info to message to pass it as a response 
 	 * \param msg response message ("" - success, either - error)

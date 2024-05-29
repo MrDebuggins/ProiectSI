@@ -3,7 +3,10 @@
 #include <iostream>
 #include <string>
 
+#define db "SI.db"
+
 using namespace std;
+
 
 namespace Database {
 	/// <summary>
@@ -139,9 +142,8 @@ namespace Database {
 	/// <param name="c">DB path</param>
 	/// <param name="table">
 	/// 1 - Algorithm table
-	///	2 - Symmetric table
-	///	3 - Asymmetric table
-	///	4 - File table
+	///	2 - Key table
+	///	3 - File table
 	/// </param>
 	void selectData(const char* c, int table)
 	{
@@ -216,7 +218,7 @@ namespace Database {
 
 
 	/// <summary>
-	/// Insert into Symmetric table
+	/// Insert into Key table
 	/// </summary>
 	/// <param name="c"> DB path </param>
 	/// <param name="alg_id"> ID of algorithm from algorithm table </param>

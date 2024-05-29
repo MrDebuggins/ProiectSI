@@ -8,7 +8,7 @@ public:
 
 	int optionChoice()
 	{
-		int option;
+		int option, ID;
 		string fileName;
 		cout << "Choose one of the following: " << endl;
 		cout << "1. Display Algorithms" << endl;
@@ -18,7 +18,8 @@ public:
 		cout << "5. Delete file" << endl;
 		cout << "6. Encrypt existing file" << endl;
 		cout << "7. Decrypt existing file" << endl;
-		cout << "8. Exit" << endl;
+		cout << "8. Generate key " << endl;
+		cout << "9. Exit" << endl;
 		cin >> option;
 
 		switch (option)
@@ -39,19 +40,34 @@ public:
 			deleteFileInterface();
 			break;
 		case 6:
+		{
 			cout << "Select file:" << endl;
 			Database::selectData(db, 3);
 			cin >> fileName;
-			cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", fileName, true) << endl;
+			Message msg(ENCRYPT, LIB_OpenGG, ALG_RSA_4096, fileName);
 			break;
+		}
 		case 7:
+		{
 			cout << "Select file to decrypt: " << endl;
 			Database::selectData(db, 3);
 			cin >> fileName;
-			cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", fileName, false) << endl;
+			Message msg(DECRYPT, LIB_OpenGG, ALG_RSA_4096, fileName);
 			break;
+		}
 		case 8:
 			return 0;
+		case 9:
+		{
+			cout << "File name for stored algorithm key: " << endl;
+			cin >> fileName;
+			cout << "Key ID" << endl << "Current keys: " << endl;
+			Database::selectData(db, 2);
+			cin >> ID;
+			Message msg(GEN_KEY, LIB_OpenSSL, ALG_RSA_4096, fileName);
+			Database::insertKey(db, ID, fileName);
+			break;
+		}
 		default:
 			cout << "Option doesn't exist" << endl;
 			break;

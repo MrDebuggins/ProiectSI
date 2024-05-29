@@ -87,7 +87,7 @@ public:
 			cout << "Select file to decrypt: " << endl;
 			Database::selectData(db, 3);
 			cin >> fileName;
-			Message msg(DECRYPT, LIB_OpenGG, ALG_RSA_4096, fileName);
+			Message msg(DECRYPT, LIB_OpenGG, ALG_RSA_4096, "rsa4096.txt", fileName, 4096);
 			out.push(msg);
 			break;
 		}

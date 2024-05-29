@@ -3,10 +3,8 @@
 #include <string>
 #include "DB.h"
 
-namespace Interface {
-
-	void insertFileInterface();
-	void deleteFileInterface();
+class Interface {
+public:
 
 	int optionChoice()
 	{
@@ -14,8 +12,8 @@ namespace Interface {
 		string fileName;
 		cout << "Choose one of the following: " << endl;
 		cout << "1. Display Algorithms" << endl;
-		cout << "2. Display files" << endl;
-		cout << "3. Display file content" << endl;
+		cout << "2. Display keys" << endl;
+		cout << "3. Display files" << endl;
 		cout << "4. Insert file" << endl;
 		cout << "5. Delete file" << endl;
 		cout << "6. Encrypt existing file" << endl;
@@ -54,7 +52,6 @@ namespace Interface {
 			break;
 		case 8:
 			return 0;
-			break;
 		default:
 			cout << "Option doesn't exist" << endl;
 			break;
@@ -65,7 +62,7 @@ namespace Interface {
 	{
 		int key_id;
 		string path;
-		double encr_time, decr_time;
+		double encr_time = 0, decr_time = 0;
 		bool status;
 
 		cout << "File path (entire path): ";
@@ -76,17 +73,6 @@ namespace Interface {
 		cin >> key_id;
 		cout << "Encrypted? (true/false)" << endl;
 		cin >> status;
-		if (status == true)
-		{
-			cout << "Encription time: " << endl;
-			cin >> encr_time;
-			cout << "Decription time: " << endl;
-			cin >> decr_time;
-		}
-		else
-		{
-			encr_time = decr_time = 0;
-		}
 		Database::insertFile(db, key_id, path, encr_time, decr_time, status);
 	}
 
@@ -101,4 +87,4 @@ namespace Interface {
 
 		Database::deleteFile(db, file_id);
 	}
-}
+};

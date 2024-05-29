@@ -80,7 +80,6 @@ public:
 			cin >> fileName;
 			Message msg(ENCRYPT, LIB_OpenGG, ALG_RSA_4096, "rsa4096.txt", fileName, 4096);
 			out.push(msg);
-			//cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", fileName, true) << endl;
 			break;
 		}
 		case 7:
@@ -89,6 +88,7 @@ public:
 			Database::selectData(db, 3);
 			cin >> fileName;
 			Message msg(DECRYPT, LIB_OpenGG, ALG_RSA_4096, fileName);
+			out.push(msg);
 			break;
 		}
 		case 8:
@@ -102,6 +102,7 @@ public:
 			Database::selectData(db, 2);
 			cin >> ID;
 			Message msg(GEN_KEY, LIB_OpenSSL, ALG_RSA_4096, fileName);
+			out.push(msg);
 			Database::insertKey(db, ID, fileName);
 			break;
 		}

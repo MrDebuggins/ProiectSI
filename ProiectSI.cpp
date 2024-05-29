@@ -9,12 +9,15 @@ using namespace std;
 int main()
 {
     sqlite3* DB;
+    Interface interface;
 
+    int ok = interface.optionChoice();
     while (true)
     {
-        int ok = Interface::optionChoice();
         if (ok == 0)
             break;
+        ok = interface.optionChoice();
+        
     }
 
     //cout << OpenGG::asymmetricEncrDecr("rsa4096.txt", "lol.txt", true) << endl;
